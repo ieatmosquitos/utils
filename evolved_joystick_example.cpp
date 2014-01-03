@@ -35,6 +35,11 @@ void axis_function1(int axis, int value){
   std::cout << "axis" << axis << ": " << value << std::endl;
 }
 
+void axis_function2(int axis, int value){
+  std::cout << "axis" << axis << ": " << -value << std::endl;
+}
+
+
 void released_function(){
   std::cout << "released a button" << std::endl;
 }
@@ -66,8 +71,8 @@ int main(int argc, char ** argv){
   
   joy.setAxisFunction(0, axis_function1);
   joy.setAxisFunction(1, axis_function1);
-  joy.setAxisFunction(2, axis_function1);
-  joy.setAxisFunction(3, axis_function1);
+  joy.setAxisFunction(2, axis_function2);
+  joy.setAxisFunction(3, axis_function2);
   joy.setAxisFunction(50, axis_function1); // out of range, does not assign the function and displays a warning
   
   joy.launchListenerThread();

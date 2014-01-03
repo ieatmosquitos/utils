@@ -3,6 +3,9 @@
   note: makes use of LIBPTHREAD
  */
 
+// TODOS:
+//	• remove placeHolderFunction and use "assigned functions" boolean arrays
+//	• Keep internal state of the joystick and provide functions for online offset adjusting (useful for defective joypads)
 
 #include <fcntl.h> // definitions
 #include <unistd.h> // devices io (read, close, ...)
@@ -13,7 +16,6 @@
 #include <pthread.h>
 
 // empty functions for avoiding problems with unassigned buttons/axis
-// TODO: remove it and use an "assigned functions" boolean array (actually, two of them: one for button functions and one for axes functions)
 void placeHolderFunction(){};
 void placeHolderFunction(int, int){};
 
