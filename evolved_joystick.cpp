@@ -15,7 +15,7 @@
 // empty functions for avoiding problems with unassigned buttons/axis
 // TODO: remove it and use an "assigned functions" boolean array (actually, two of them: one for button functions and one for axes functions)
 void placeHolderFunction(){};
-void placeHolderFunction(int){};
+void placeHolderFunction(int, int){};
 
 // EvolvedJoystick specified later
 class EvolvedJoystick;
@@ -31,17 +31,15 @@ class EvolvedJoystick{
   char _axes_number;
   char * _buttons = NULL;
   char _buttons_number;
-  bool _thresholded;	// TODO: yet did not decide how to use this, maybe dropping all values lower than this to 0, but this could be done by the user side...
   pthread_t _listenerThread;
   
   void (** _button_press_functions)() ;
   void (** _button_release_functions)() ;
-  void (** _axis_functions)(int) ;
+  void (** _axis_functions)(int, int) ;
   
 public:
   
-  EvolvedJoystick( std::string device_, bool thresholded_=false)
-    : _thresholded(thresholded_)
+  EvolvedJoystick( std::string device_)
   {
   
     _joy_fd = open(device_.c_str(), O_RDONLY);
@@ -66,7 +64,7 @@ public:
       _button_release_functions[i] = placeHolderFunction;
     }
     
-    _axis_functions = (void (**)(int)) malloc(_axes_number * sizeof (void *));
+    _axis_functions = (void (**)(int, int)) malloc(_axes_number * sizeof (void *));
     for(unsigned int i = 0; i<_axes_number; i++){
       _axis_functions[i] = placeHolderFunction;
     }
@@ -102,7 +100,7 @@ public:
     _button_release_functions[button_number] = function_pointer_;
   }
   
-  void setAxisFunction(unsigned int axes_number, void (*function_pointer_)(int)){
+  void setAxisFunction(unsigned int axes_number, void (*function_pointer_)(int, int)){
     
     if(axes_number > _axes_number){
       std::cerr << "WARNING: could not assign function to axes " << axes_number << ": joystick has less axes" << std::endl;
@@ -154,7 +152,7 @@ void * joyListener(void * joyPointer){
   int numAxes = joy->numOfAxes();
   void (** buttonPressFunctions)() = (void (**)()) joy->buttonPressFunctions();
   void (** buttonReleaseFunctions)() = (void (**)()) joy->buttonReleaseFunctions();
-  void (** axisFunctions)(int) = (void (**)(int)) joy->axesFunctions();
+  void (** axisFunctions)(int, int) = (void (**)(int, int)) joy->axesFunctions();
   int joy_fd = joy->deviceFD();
   
   struct js_event jev;
@@ -175,7 +173,7 @@ void * joyListener(void * joyPointer){
       break;
       
     case JS_EVENT_AXIS:
-      axisFunctions[jev.number](jev.value);
+      axisFunctions[jev.number](jev.number, jev.value);
       break;
       
     default:

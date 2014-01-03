@@ -31,12 +31,17 @@ void example_function3(){
   _mutex.unlock();
 }
 
-void axis_function1(int value){
-  std::cout << "axis1: " << value << std::endl;
+void axis_function1(int axis, int value){
+  std::cout << "axis" << axis << ": " << value << std::endl;
 }
 
 void released_function(){
   std::cout << "released a button" << std::endl;
+}
+
+void quit(){
+  std::cout << std::endl << "----- BYE BYE -----" << std::endl << std::endl;
+  exit(0);
 }
 
 int main(int argc, char ** argv){
@@ -52,12 +57,18 @@ int main(int argc, char ** argv){
   joy.setButtonPressFunction(0, example_function1);
   joy.setButtonPressFunction(1, example_function2);
   joy.setButtonPressFunction(2, example_function3);
+  joy.setButtonPressFunction(3, quit);
   
   joy.setButtonReleaseFunction(0, released_function);
   joy.setButtonReleaseFunction(1, released_function);
   joy.setButtonReleaseFunction(2, released_function);
+  joy.setButtonReleaseFunction(30, released_function); // out of range, does not assign the function and displays a warning
   
   joy.setAxisFunction(0, axis_function1);
+  joy.setAxisFunction(1, axis_function1);
+  joy.setAxisFunction(2, axis_function1);
+  joy.setAxisFunction(3, axis_function1);
+  joy.setAxisFunction(50, axis_function1); // out of range, does not assign the function and displays a warning
   
   joy.launchListenerThread();
   
