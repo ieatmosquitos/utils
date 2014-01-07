@@ -29,9 +29,9 @@ class EvolvedJoystick{
 
   char _device_name[512];
   int _joy_fd;
-  int * _axes = NULL;
+  int * _axes;
   char _axes_number;
-  char * _buttons = NULL;
+  char * _buttons;
   char _buttons_number;
   pthread_t _listenerThread;
   
